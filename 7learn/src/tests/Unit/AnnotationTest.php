@@ -36,4 +36,24 @@ class AnotationTest extends TestCase
         $value++;
         $this->assertEquals($value, 2);
     }
+
+    /**
+     * @dataProvider numberProvider
+     */
+    public function testItValidOrNot($number)
+    {
+        $this->assertTrue($number > 0);
+    }
+
+    public function numberProvider()
+    {
+        return [
+            [0], # Fail
+            [1],
+            [2],
+            [3],
+            [4],
+            [5]
+        ];
+    }
 }
