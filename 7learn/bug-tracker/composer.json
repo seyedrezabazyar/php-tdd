@@ -1,0 +1,23 @@
+{
+    "name": "seyedrezabazyar/bug-tracker",
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "authors": [
+        {
+            "name": "seyedrezabazyar",
+            "email": "seyedrezabazyar@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "app\\": "src"
+        },
+        "autoload-dev": {
+            "psr-4": {
+                "test\\": "tests"
+            }
+        }
+    }
+}
