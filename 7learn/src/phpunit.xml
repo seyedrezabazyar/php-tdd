@@ -2,8 +2,8 @@
 
 <phpunit bootstrap = "vendor/autoload.php"
 	colors = "true"
-	stopOnFailure = "true"
-	testdox = "true"
+	stopOnFailure = "false"
+	testdox = "false"
 	verbose = "true">
 
 	<testsuites>
