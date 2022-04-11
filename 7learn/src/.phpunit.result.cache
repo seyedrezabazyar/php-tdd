@@ -1,1 +1,1 @@
-{"version":1,"defects":{"ExampleTest::testTwoPlusTwoResultInfo":3},"times":{"ExampleTest::testTwoPlusTwoResultInfo":0.002}}
+{"version":1,"defects":{"ExampleTest::testTwoPlusTwoResultInfo":3},"times":{"ExampleTest::testTwoPlusTwoResultInfo":0.002,"UserTest::testThatWeCanGetFirstName":0,"UserTest::testThatWeCanGetLastName":0,"UserTest::testThatWeCanGetFullName":0,"UserTest::testThatWeCanGetTrimmedFullName":0}}
