@@ -3,6 +3,7 @@
 <phpunit bootstrap = "vendor/autoload.php"
 	colors = "true"
 	stopOnFailure = "true"
+	testdox = "true"
 	verbose = "true">
 
 	<testsuites>
