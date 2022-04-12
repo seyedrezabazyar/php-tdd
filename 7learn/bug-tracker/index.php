@@ -1,5 +1,9 @@
 <?php
 
+use App\Helpers\Config;
+
 require_once './vendor/autoload.php';
 
-echo "ORM Project";
+$result = Config::get('database', 'pdo');
+
+var_dump($result);
