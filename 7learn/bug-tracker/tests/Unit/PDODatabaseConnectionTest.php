@@ -5,29 +5,28 @@ namespace Tests\Unit;
 use App\Contracts\DatabaseConnectionInterface;
 use App\Database\PDODatabaseConnection;
 use App\Helpers\Config;
+use PDO;
 use PHPUnit\Framework\TestCase;
 
 class PDODatabaseConnectionTest extends TestCase
 {
     public function testPDODatabaseConnectionImplementsDatabaseConnectionInterface()
     {
-        $configs = $this->getConfig();
-        $pdoconnection = new PDODatabaseConnection($configs);
-        $this->assertInstanceOf(DatabaseConnectionInterface::class, $pdoconnection);
+        $config = $this->getConfig();
+        $pdoConnection = new PDODatabaseConnection($config);
+        $this->assertInstanceOf(DatabaseConnectionInterface::class, $pdoConnection);
+    }
+
+    public function testConnectMethodShouldBeConnectToDatabase()
+    {
+        $config = $this->getConfig();
+        $pdoConnection = new PDODatabaseConnection($config);
+        $pdoConnection->connect();
+        $this->assertInstanceOf(PDO::class, $pdoConnection->getConnection());
     }
 
     private function getConfig()
     {
-        // $config = Config::get('database', 'pdo');
-        # Better method in database.php file...
-        // return array_merge($config, [
-        //     'database' => 'bug_tracker_testing'
-        // ]);
-
-        # Better method
-        // $config = Config::get('database', 'pdo_testing');
-        // var_dump($config);
-
         return Config::get('database', 'pdo_testing');
     }
 }
