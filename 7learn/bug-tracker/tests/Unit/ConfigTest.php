@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Exeptions\configFileNotFoundException;
+use App\Exceptions\configFileNotFoundException;
 use App\Helpers\Config;
 use PHPUnit\Framework\TestCase;
 

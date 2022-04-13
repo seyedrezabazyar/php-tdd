@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-use App\Exeptions\configFileNotFoundException;
+use App\Exceptions\configFileNotFoundException;
 
 class Config
 {
