@@ -7,23 +7,48 @@ use PHPUnit\Framework\TestCase;
 
 class PDOQueryBuilderTest extends TestCase
 {
-    public function testItCanCreateData()
+    private $queryBuilder;
+
+    public function setUp(): void
     {
         $pdoConnection = new PDODatabaseConnection($this->getConfig());
-        $queryBuilder = new PDOQueryBuilder($pdoConnection->connect());
+        $this->queryBuilder = new PDOQueryBuilder($pdoConnection->connect());
+        parent::setUp();
+    }
+
+    public function testItCanCreateData()
+    {
+        $result = $this->insertIntoDb();
+        $this->assertIsInt($result);
+        $this->assertGreaterThan(0, $result);
+    }
+
+    public function testItCanUpdateData()
+    {
+        $this->insertIntoDb();
+
+        $result = $this->queryBuilder
+            ->table('bugs')
+            ->where('user', 'Seyed Reza Bazyar')
+            ->update(['email' => 'seyedrezabazyar@hotmail.com', 'name' => 'My name']);
+
+        $this->assertEquals(2, $result);
+    }
+
+    private function getConfig()
+    {
+        return Config::get('database', 'pdo_testing');
+    }
+
+    private function insertIntoDb()
+    {
         $data = [
             'name' => 'First Bug Report',
             'link' => 'http://link.com',
             'user' => 'Seyed Reza Bazyar',
             'email' => 'seyedrezabazyar@gmail.com',
         ];
-        $result = $queryBuilder->table('bugs')->create($data);
-        $this->assertIsInt($result);
-        $this->assertGreaterThan(0, $result);
-    }
 
-    private function getConfig()
-    {
-        return Config::get('database', 'pdo_testing');
+        return $this->queryBuilder->table('bugs')->create($data);
     }
 }
