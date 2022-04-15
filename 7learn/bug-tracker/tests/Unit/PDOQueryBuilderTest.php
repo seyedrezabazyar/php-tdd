@@ -32,7 +32,7 @@ class PDOQueryBuilderTest extends TestCase
             ->where('user', 'Seyed Reza Bazyar')
             ->update(['email' => 'seyedrezabazyar@hotmail.com', 'name' => 'My name']);
 
-        $this->assertEquals(2, $result);
+        $this->assertEquals(1, $result);
     }
 
     private function getConfig()
@@ -50,5 +50,12 @@ class PDOQueryBuilderTest extends TestCase
         ];
 
         return $this->queryBuilder->table('bugs')->create($data);
+    }
+
+    public function tearDown(): void
+    {
+        $this->queryBuilder->truncateAllTable();
+
+        parent::tearDown();
     }
 }
