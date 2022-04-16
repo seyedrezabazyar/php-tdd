@@ -35,6 +35,21 @@ class PDOQueryBuilderTest extends TestCase
         $this->assertEquals(1, $result);
     }
 
+    public function testItCanDeleteRecord()
+    {
+        $this->insertIntoDb();
+        $this->insertIntoDb();
+        $this->insertIntoDb();
+        $this->insertIntoDb();
+
+        $result = $this->queryBuilder
+            ->table('bugs')
+            ->where('user', 'Seyed Reza Bazyar')
+            ->delete();
+
+        $this->assertEquals(4, $result);
+    }
+
     private function getConfig()
     {
         return Config::get('database', 'pdo_testing');
