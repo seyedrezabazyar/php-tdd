@@ -82,4 +82,14 @@ class PDOQueryBuilder
             $this->connection->prepare("TRUNCATE TABLE `{$table}`")->execute();
         }
     }
+
+    public function beginTransaction()
+    {
+        $this->connection->beginTransaction();
+    }
+
+    public function rollback()
+    {
+        $this->connection->rollBack();
+    }
 }
