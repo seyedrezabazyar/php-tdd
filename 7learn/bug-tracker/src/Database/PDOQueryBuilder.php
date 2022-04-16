@@ -73,6 +73,15 @@ class PDOQueryBuilder
         return $query->rowCount();
     }
 
+    public function get()
+    {
+        $conditions = implode(' and ', $this->conditions);
+        $sql = "SELECT * FROM {$this->table} WHERE {$conditions}";
+        $query = $this->connection->prepare($sql);
+        $query->execute($this->values);
+        return $query->fetchAll();
+    }
+
     public function truncateAllTable()
     {
         $query = $this->connection->prepare("SHOW TABLES");

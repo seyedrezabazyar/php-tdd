@@ -67,6 +67,22 @@ class PDOQueryBuilderTest extends TestCase
         $this->assertEquals(4, $result);
     }
 
+    public function testItCanFetchData()
+    {
+        $this->multipleInsertIntoDb(10);
+        $this->multipleInsertIntoDb(10, ['user' => 'Mehrdad Sami']);
+
+        $result = $this->queryBuilder
+            ->table('bugs')
+            ->where('user', 'Mehrdad Sami')
+            ->get();
+
+        var_dump($result);
+
+        $this->assertIsArray($result);
+        $this->assertCount(10, $result);
+    }
+
     private function getConfig()
     {
         return Config::get('database', 'pdo_testing');
@@ -82,6 +98,13 @@ class PDOQueryBuilderTest extends TestCase
         ], $options);
 
         return $this->queryBuilder->table('bugs')->create($data);
+    }
+
+    public function multipleInsertIntoDb($count, $options = [])
+    {
+        for ($i = 1; $i <= $count; $i++) {
+            $this->insertIntoDb($options);
+        }
     }
 
     public function tearDown(): void
