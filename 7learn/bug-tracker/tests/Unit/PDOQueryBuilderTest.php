@@ -38,6 +38,20 @@ class PDOQueryBuilderTest extends TestCase
         $this->assertEquals(1, $result);
     }
 
+    public function testItCanUpdateWithMultipleWhere()
+    {
+        $this->insertIntoDb();
+        $this->insertIntoDb(['user' => 'New Name']);
+
+        $result = $this->queryBuilder
+            ->table('bugs')
+            ->where('user', 'Seyed Reza Bazyar')
+            ->where('link', 'http://link.com')
+            ->update(['name' => 'Afret Multiple Where']);
+
+        $this->assertEquals(1, $result);
+    }
+
     public function testItCanDeleteRecord()
     {
         $this->insertIntoDb();
@@ -58,14 +72,14 @@ class PDOQueryBuilderTest extends TestCase
         return Config::get('database', 'pdo_testing');
     }
 
-    private function insertIntoDb()
+    private function insertIntoDb($options = [])
     {
-        $data = [
+        $data = array_merge([
             'name' => 'First Bug Report',
             'link' => 'http://link.com',
             'user' => 'Seyed Reza Bazyar',
             'email' => 'seyedrezabazyar@gmail.com',
-        ];
+        ], $options);
 
         return $this->queryBuilder->table('bugs')->create($data);
     }
