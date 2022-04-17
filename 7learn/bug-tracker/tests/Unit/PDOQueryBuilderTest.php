@@ -100,6 +100,23 @@ class PDOQueryBuilderTest extends TestCase
         $this->assertEquals(['name', 'user'], array_keys($result));
     }
 
+    public function testItCanGetFirstRow()
+    {
+        $this->multipleInsertIntoDb(10, ['name' => 'First Row']);
+
+        $result = $this->queryBuilder
+            ->table('bugs')
+            ->where('name', 'First Row')
+            ->first();
+
+        $this->assertIsObject($result);
+        $this->assertObjectHasAttribute('id', $result);
+        $this->assertObjectHasAttribute('email', $result);
+        $this->assertObjectHasAttribute('link', $result);
+        $this->assertObjectHasAttribute('name', $result);
+        $this->assertObjectHasAttribute('user', $result);
+    }
+
     private function getConfig()
     {
         return Config::get('database', 'pdo_testing');
