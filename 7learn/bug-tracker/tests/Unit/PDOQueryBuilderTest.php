@@ -117,6 +117,30 @@ class PDOQueryBuilderTest extends TestCase
         $this->assertObjectHasAttribute('user', $result);
     }
 
+    public function testItCanFindWithId()
+    {
+        $this->insertIntoDb();
+        $id = $this->insertIntoDb(['name' => 'For Find']);
+        $result = $this->queryBuilder
+            ->table('bugs')
+            ->find($id);
+
+        $this->assertIsObject($result);
+        $this->assertEquals('For Find', $result->name);
+    }
+
+    public function testItCanFindBy()
+    {
+        $this->insertIntoDb();
+        $id = $this->insertIntoDb(['name' => 'For Find By']);
+        $result = $this->queryBuilder
+            ->table('bugs')
+            ->findBy('name', 'For Find By');
+
+        $this->assertIsObject($result);
+        $this->assertEquals($id, $result->id);
+    }
+
     private function getConfig()
     {
         return Config::get('database', 'pdo_testing');

@@ -90,6 +90,16 @@ class PDOQueryBuilder
         return empty($data) ? null : $data[0];
     }
 
+    public function find(int $id)
+    {
+        return $this->where('id', $id)->first();
+    }
+
+    public function findBy(string $column, $value)
+    {
+        return $this->where($column, $value)->first();
+    }
+
     public function truncateAllTable()
     {
         $query = $this->connection->prepare("SHOW TABLES");
