@@ -11,6 +11,7 @@ class PDOQueryBuilder
     protected $connection;
     protected $conditions;
     protected $value;
+    protected $statement;
 
     public function __construct(DatabaseConnectionInterface $connection)
     {
@@ -33,18 +34,25 @@ class PDOQueryBuilder
         $fields = implode(',', array_keys($data));
         $placeholder = implode(',', $placeholder);
 
+        $this->values = array_values($data);
+
         $sql = "INSERT INTO {$this->table} ({$fields}) VALUES ({$placeholder})";
 
-        $query = $this->connection->prepare($sql);
-        $query->execute(array_values($data));
+        $this->execute($sql);
 
         return (int)$this->connection->lastInsertId();
     }
 
     public function where(string $column, string $value)
     {
-        $this->conditions[] = "{$column}=?";
+        if (is_null($this->conditions)) {
+            $this->conditions = "{$column}=?";
+        } else {
+            $this->conditions .= " and {$column}=?";
+        }
+
         $this->values[] = $value;
+
         return $this;
     }
 
@@ -55,33 +63,32 @@ class PDOQueryBuilder
             $fields[] = "{$column}='{$value}'";
         }
         $fields = implode(', ', $fields);
-        $conditions = implode(' and ', $this->conditions);
 
-        $sql = "UPDATE {$this->table} SET {$fields} WHERE {$conditions}";
-        $query = $this->connection->prepare($sql);
-        $query->execute($this->values);
-        return $query->rowCount();
+        $sql = "UPDATE {$this->table} SET {$fields} WHERE {$this->conditions}";
+
+        $this->execute($sql);
+
+        return $this->statement->rowCount();
     }
 
     public function delete()
     {
-        $conditions = implode(' and ', $this->conditions);
+        $sql = "DELETE FROM {$this->table} WHERE {$this->conditions}";
 
-        $sql = "DELETE FROM {$this->table} WHERE {$conditions}";
-        $query = $this->connection->prepare($sql);
-        $query->execute($this->values);
-        return $query->rowCount();
+        $this->execute($sql);
+
+        return $this->statement->rowCount();
     }
 
     public function get(array $columns = ['*'])
     {
-        $conditions = implode(' and ', $this->conditions);
         $columns = implode(',', $columns);
 
-        $sql = "SELECT {$columns} FROM {$this->table} WHERE {$conditions}";
-        $query = $this->connection->prepare($sql);
-        $query->execute($this->values);
-        return $query->fetchAll();
+        $sql = "SELECT {$columns} FROM {$this->table} WHERE {$this->conditions}";
+
+        $this->execute($sql);
+
+        return $this->statement->fetchAll();
     }
 
     public function first(array $columns = ['*'])
@@ -118,5 +125,13 @@ class PDOQueryBuilder
     public function rollback()
     {
         $this->connection->rollBack();
+    }
+
+    private function execute(string $sql)
+    {
+        $this->statement = $this->connection->prepare($sql);
+        $this->statement->execute($this->values);
+        $this->values = [];
+        return $this;
     }
 }
