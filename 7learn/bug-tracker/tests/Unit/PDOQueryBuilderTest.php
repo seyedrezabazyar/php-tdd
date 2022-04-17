@@ -121,6 +121,7 @@ class PDOQueryBuilderTest extends TestCase
     {
         $this->insertIntoDb();
         $id = $this->insertIntoDb(['name' => 'For Find']);
+
         $result = $this->queryBuilder
             ->table('bugs')
             ->find($id);
@@ -133,12 +134,50 @@ class PDOQueryBuilderTest extends TestCase
     {
         $this->insertIntoDb();
         $id = $this->insertIntoDb(['name' => 'For Find By']);
+
         $result = $this->queryBuilder
             ->table('bugs')
             ->findBy('name', 'For Find By');
 
         $this->assertIsObject($result);
         $this->assertEquals($id, $result->id);
+    }
+
+    public function testItReturnEmptyArrayWhenRecordNotFound()
+    {
+        $this->multipleInsertIntoDb(4);
+
+        $result = $this->queryBuilder
+            ->table('bugs')
+            ->where('user', 'Dummy')
+            ->get();
+
+        $this->assertIsArray($result);
+        $this->assertEmpty($result);
+    }
+
+    public function testItReturnsNullWhenFirstRecordNotFound()
+    {
+        $this->multipleInsertIntoDb(4);
+
+        $result = $this->queryBuilder
+            ->table('bugs')
+            ->where('user', 'Dummy')
+            ->first();
+
+        $this->assertNull($result);
+    }
+
+    public function testItReturnsZeroWhenRecordNotFoundForUpdate()
+    {
+        $this->multipleInsertIntoDb(4);
+
+        $result = $this->queryBuilder
+            ->table('bugs')
+            ->where('user', 'Dummy')
+            ->update(['name' => 'Test']);
+
+        $this->assertEquals(0, $result);
     }
 
     private function getConfig()
