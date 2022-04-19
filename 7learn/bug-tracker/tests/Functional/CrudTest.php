@@ -73,6 +73,24 @@ class TestFunctional extends TestCase
         $this->assertEquals('API For Update', $bug->name);
     }
 
+    /**
+     * @depends testItCanCreateDataWithAPI
+     */
+    public function testItCanFetchDataWithAPI($bug)
+    {
+        $response = $this->httpClient->get('index.php', [
+            'json' => [
+                'id' => $bug->id
+            ]
+        ]);
+
+        echo $response->getBody();
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertArrayHasKey('id', json_decode($response->getBody(), true));
+    }
+
     public function tearDown(): void
     {
         $this->httpClient = null;

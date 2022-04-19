@@ -38,3 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 
     json_response(null, 200);
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $bug = $queryBuilder->table('bugs')
+        ->find(request()['id']);
+
+    json_response($bug, 200);
+}
