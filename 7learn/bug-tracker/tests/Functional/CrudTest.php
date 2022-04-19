@@ -23,6 +23,30 @@ class TestFunctional extends TestCase
         parent::setUp();
     }
 
+    public function testItCanCreateDataWithAPI()
+    {
+        $data = [
+            'json' => [
+                'name' => 'API',
+                'user' => 'Ahmad',
+                'email' => 'api@gmail.com',
+                'link' => 'api.com'
+            ]
+        ];
+
+        $response = $this->httpClient->post('index.php', $data);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $bug = $this->queryBuilder
+            ->table('bugs')
+            ->where('name', 'API')
+            ->where('user', 'Ahmad')
+            ->first();
+
+        $this->assertNotNull($bug);
+    }
+
     public function tearDown(): void
     {
         $this->httpClient = null;
