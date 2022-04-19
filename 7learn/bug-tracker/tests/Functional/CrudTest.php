@@ -45,6 +45,32 @@ class TestFunctional extends TestCase
             ->first();
 
         $this->assertNotNull($bug);
+
+        return $bug;
+    }
+
+    /**
+     * @depends testItCanCreateDataWithAPI
+     */
+    public function testItCanUpdateDataWithAPI($bug)
+    {
+        $data = [
+            'json' => [
+                'id' => $bug->id,
+                'name' => 'API For Update'
+            ]
+        ];
+
+        $response = $this->httpClient->put('index.php', $data);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $bug = $this->queryBuilder
+            ->table('bugs')
+            ->find($bug->id);
+
+        $this->assertNotNull($bug);
+        $this->assertEquals('API For Update', $bug->name);
     }
 
     public function tearDown(): void
